@@ -1,0 +1,28 @@
+@import "../../globalStyles/color.scss";
+.breadcrumbs {
+  --bs-breadcrumb-divider: "/";
+  background-image: url("../../assets/images/breadcrumbs-image.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  .heading {
+    color: white;
+    text-align: center;
+    padding-top: 60px;
+    font-size: 5rem;
+  }
+  .nav {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    color: white!important;
+    a {
+      color: $primary;
+      text-decoration: none;
+    }
+    .active {
+      color: white;
+    }
+  }
+}

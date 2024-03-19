@@ -1,0 +1,15 @@
+{
+  "name": "capture-crafts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-server": "cd MERN-Backend-Boiler-Plate && yarn install",
+    "install-client": "cd MERN-Frontend-Boiler-Plate && yarn install",
+    "start-server": "cd MERN-Backend-Boiler-Plate && node server.js",
+    "start-client": "cd MERN-Frontend-Boiler-Plate && yarn start"
+  },
+  "author": "",
+  "license": "ISC"
+}

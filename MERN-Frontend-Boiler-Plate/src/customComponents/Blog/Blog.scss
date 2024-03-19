@@ -1,0 +1,142 @@
+@import "../../globalStyles/color.scss";
+
+.blog {
+  background-color: $primary-4;
+  font-family: "josefin sans", sans-serif;
+  .blog-row{
+    padding-inline: 6rem;
+    padding-top: 0;
+    padding-bottom: 6rem;
+  }
+  .heading-1 {
+    font-size: 5rem;
+    line-height: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-block: 6rem;
+  }
+  .blog-card {
+    border: none;
+    padding-top: 5rem;
+    padding-inline: 2rem;
+    transition: 0.33s;
+    will-change: transform;
+    transform: scale(0.95);
+    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.19);
+    .card-header {
+      border-bottom: none;
+    }
+    .meta {
+      padding: 0;
+      margin: 0;
+      color: $primary-3 !important;
+      list-style: none;
+      display: flex;
+      font-style: italic;
+      .separator::after {
+        content: "/";
+        margin-inline: 0.7rem;
+        color: $primary-3;
+      }
+      time {
+        font-size: 1rem;
+      }
+      a {
+        font-size: 1rem;
+        color: $primary-3 !important;
+        text-decoration: none;
+        &:hover {
+          color: $dark-1;
+        }
+      }
+    }
+    .card-subtitle{
+        margin-bottom: 1.5rem;
+    }
+    .card-title {
+        margin: 0;
+        margin-bottom: 1.5rem;
+      a {
+        max-width: 90%;
+        color: $dark-1;
+        text-decoration: none;
+        font-size: 2rem;
+        font-weight: 700;
+        &:hover {
+          color: $primary;
+        }
+        &:focus {
+          color: inherit;
+        }
+      }
+    }
+    .card-body{
+      padding-block: 0;
+      margin-bottom: 3rem;
+    }
+    .description {
+      font-size: 1.1rem;
+      color: $primary-3;
+
+    }
+    .card-footer-container {
+      padding: 0;
+      padding-block: 2rem;
+      .card-footer-row {
+        margin: 0;
+        border-top: none;
+        .profile {
+          padding: 0;
+          display: flex;
+          gap: 1rem;
+          img {
+            border-radius: 50%;
+          }
+          h4 {
+            font-weight: 700;
+            text-align: center;
+            margin-block: auto;
+          }
+        }
+      }
+    }
+  }
+  .blog-card:hover {
+    transform: scale(1);
+    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.19);
+  }
+  @media screen and (max-width: 768px) {
+    .blog-row {
+      padding-inline: 2rem;
+    }
+    .blog-card {
+        margin-top: 2rem;
+        .meta{
+            time{
+                font-size: 1.2rem;
+            }
+            a{
+                font-size: 1.2rem;
+            }
+        }
+        .card-title{
+            margin-bottom: 1rem
+        }
+        .card-body{
+            margin-bottom: 1.5rem;
+        }
+        .description{
+            font-size: 1.5rem;
+        }
+        .card-footer-container{
+            .card-footer-row{
+                .profile{
+                    h4{
+                        font-size: 2rem;
+                    }
+                }
+            }
+        }
+    }
+  }
+}

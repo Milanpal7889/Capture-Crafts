@@ -1,0 +1,245 @@
+@import "../../globalStyles/color.scss";
+
+// input css
+.bookus {
+  margin: 0rem !important;
+  padding: 6rem !important;
+  > .row{
+    gap: 4rem;
+  }
+  &-col {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  &-form {
+    width: 100%;
+    padding: 5rem;
+    height: max-content;
+    background-color: transparent;
+    transition: 1s background-color;
+    position: relative;
+    .form-inline {
+      color: $primary-2;
+      margin-top: 2.5rem;
+      position: relative;
+      > label {
+        position: absolute;
+        top: 0;
+        font-weight: 700;
+        font-size: large;
+      }
+      > input,
+      textarea {
+        border: none;
+        border-radius: 0;
+        width: 95%;
+        margin-top: 4rem;
+        border-bottom: 1px solid $primary-3;
+        background-color: transparent;
+        padding-left: 0;
+        height: 3rem;
+        padding-bottom: 1rem;
+      }
+      > input:focus,
+      input:active,
+      textarea:focus,
+      textarea:active {
+        box-shadow: none;
+        border: none;
+        border-bottom: 1px solid $primary-3;
+        outline: none;
+      }
+      input:active + .bookus-label,
+      input:focus + .bookus-label,
+      input:not(:placeholder-shown) + .bookus-label,
+      textarea:active + .bookus-label,
+      textarea:focus + .bookus-label,
+      textarea:not(:placeholder-shown) + .bookus-label {
+        display: none !important;
+        background-color: transparent!important;
+      }
+      > textarea:active,
+      textarea:focus,
+      textarea {
+        box-shadow: none !important;
+      }
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $primary;
+      z-index: -1;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: 0.8s transform;
+    }
+    &:hover {
+      &::before {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .form-inline {
+        > label {
+          color: white;
+        }
+        > input,
+        textarea {
+          caret-color: white;
+          color: white;
+          border-bottom: 1px solid white;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 2rem !important;
+    &-col{
+      width: 100%;
+    }
+    &-form {
+      width: 100%;
+      padding: 3rem;
+      .form-inline {
+        margin-top: 1rem;
+        > input,
+        textarea {
+          margin-top: 1rem;
+        }
+      }
+    }
+    .form-inline {
+      margin-top: 4rem;
+    }
+  }
+}
+
+// span css
+.bookus-form {
+  position: relative;
+  vertical-align: middle;
+  > span {
+    position: absolute;
+    width: 10%;
+    height: 10%;
+    vertical-align: middle;
+    border: 0 solid $primary-4;
+    background-color: transparent;
+    pointer-events: none;
+    transition: height 0.5s, width 0.5s, color 0.08s;
+  }
+  > span:nth-child(1) {
+    top: 0;
+    left: 0;
+    border-width: 1px 0 0 1px;
+  }
+
+  > span:nth-child(2) {
+    top: 0;
+    right: 0;
+    border-width: 1px 1px 0 0;
+  }
+
+  > span:nth-child(3) {
+    bottom: 0;
+    right: 0;
+    border-width: 0 1px 1px 0;
+  }
+
+  > span:nth-child(4) {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 1px 1px;
+  }
+
+  &:hover > span {
+    border-color: #00bd9d;
+  }
+
+  &:hover > span:nth-child(1) {
+    width: 100%;
+  }
+
+  &:hover > span:nth-child(2) {
+    height: 100%;
+  }
+
+  &:hover > span:nth-child(3) {
+    width: 100%;
+  }
+
+  &:hover > span:nth-child(4) {
+    height: 100%;
+  }
+}
+
+// button css
+.bookus-form {
+  .submit-button {
+    border-radius: 0;
+    font-weight: 700;
+    width: 100%;
+    padding-block: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: transparent !important;
+    color: $primary !important;
+    border: 1px solid $primary !important;
+    display: block;
+    position: relative;
+    z-index: 1;
+    transition: 0.3s ease-in-out;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      z-index: -1;
+      transform: scaleX(0.5);
+      opacity: 0;
+      transition: 0.4s ease-in-out;
+    }
+    &:hover {
+      color: $primary !important;
+    }
+    &:hover::before {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+  }
+  &:hover {
+    .submit-button {
+      color: white !important;
+      border: 1px solid white !important;
+      &:hover {
+        color: $primary !important;
+      }
+    }
+  }
+}
+
+.bookus {
+  &-text {
+    text-align: left;
+    &-inner {
+      display: flex;
+      flex-direction: column;
+      padding-block: 12rem;
+    }
+    &-heading {
+      font-size: 5rem;
+    }
+    &-para {
+      color: $primary-3;
+      font-size: 1.2rem;
+    }
+  }
+}

@@ -1,0 +1,130 @@
+@import "../../globalStyles/main.scss";
+@import "../../globalStyles/color.scss";
+
+#NavbarNav {
+  padding: 1rem;
+  ul {
+    font-family: "josefin sans", sans-serif;
+    font-size: 1.55rem;
+    line-height: 2rem;
+    font-weight: 600;
+    gap: 5rem;
+    margin-inline-start: 5rem;
+  }
+  .active {
+    color: $link-active !important;
+  }
+
+  .auth-links {
+    gap: 1rem;
+  }
+  .icon {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 18px;
+  }
+
+  .icon:before {
+    position: relative;
+    display: inline-block;
+    font-weight: 400;
+    font-style: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .icon-style-camera {
+    position: relative;
+    min-height: 38px;
+    min-width: 38px;
+    padding: 11px 10px 10px;
+    vertical-align: middle;
+  }
+
+  .icon-style-camera > span {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    border: 0 solid #d4d1d1;
+    background-color: transparent;
+    pointer-events: none;
+    transition: height 0.5s, width 0.5s, color 0.08s;
+  }
+
+  .icon-style-camera > span:nth-child(1) {
+    top: 0;
+    left: 0;
+    border-width: 1px 0 0 1px;
+  }
+
+  .icon-style-camera > span:nth-child(2) {
+    top: 0;
+    right: 0;
+    border-width: 1px 1px 0 0;
+  }
+
+  .icon-style-camera > span:nth-child(3) {
+    bottom: 0;
+    right: 0;
+    border-width: 0 1px 1px 0;
+  }
+
+  .icon-style-camera > span:nth-child(4) {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 1px 1px;
+  }
+
+  .icon-style-camera:hover > span {
+    border-color: #00bd9d;
+  }
+
+  .icon-style-camera:hover > span:nth-child(1) {
+    width: 100%;
+  }
+
+  .icon-style-camera:hover > span:nth-child(2) {
+    height: 100%;
+  }
+
+  .icon-style-camera:hover > span:nth-child(3) {
+    width: 100%;
+  }
+
+  .icon-style-camera:hover > span:nth-child(4) {
+    height: 100%;
+  }
+
+  .icon-style-camera:hover {
+    color: $link-active;
+  }
+}
+
+.navbar-toggler > span{
+  font-size: larger;
+}
+
+@media screen and (max-width: 768px) {
+  #NavbarNav {
+    padding: 1rem;
+    & > ul {
+      gap: 1.5rem;
+      text-align: left;
+      margin-right: 0 !important;
+    }
+    .auth-links {
+      margin-left: 0 !important;
+    }
+    .icon {
+      font-size: 1.5rem;
+    }
+    .auth-links > a{
+      padding: 0 !important;
+      padding-top: 1.5rem !important;
+    }
+    .icon-style-camera > span {
+      display: none;
+    }
+  }
+}
