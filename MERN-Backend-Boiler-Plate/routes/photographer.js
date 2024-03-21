@@ -1,14 +1,14 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const tokenAuth = require('../middleware/tokenAuth')
-const User = require('../model/user')
-const { body, validationResult } = require('express-validator')
-const router = express.Router()
-const JWT_SECRET = "thisissecratekey"
+const express = require("express");
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const tokenAuth = require("../middleware/tokenAuth");
+const User = require("../model/photographer");
+const { body, validationResult } = require("express-validator");
+const router = express.Router();
 
-router.get('/all', async(req,res)=>{
+
+router.post('/all', async(req,res)=>{
     const users = await User.find()
     res.send({error:false, users:users})
 })
@@ -42,7 +42,7 @@ router.post('/signup', [
                 id: user.id
             }
         }
-        jwt.sign(payload, JWT_SECRET, {expiresIn: 360000}, (err, token) => {
+        jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 360000}, (err, token) => {
             if(err) throw err
             res.json({token})
         })
@@ -68,9 +68,9 @@ router.post('/login', async(req,res)=>{
                 id: user.id
             }
         }
-        jwt.sign(payload, JWT_SECRET, {expiresIn: 360000}, (err, token) => {
+        jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 360000}, (err, token) => {
             if(err) throw err
-            res.json({error:"false",message:"user logged IN",token})
+            res.json({token})
         })
     } catch (err) {
         console.error(err.message)
@@ -112,5 +112,3 @@ router.delete('/delete', tokenAuth, async(req,res)=>{
 })
 
 module.exports = router
-
-
