@@ -6,6 +6,11 @@ const photographerSchema = new mongoose.Schema({
     ref: "User",
   },
 
+  cityid:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "City",
+  },
+  
   name: {
     type: String,
     required: true,
@@ -32,10 +37,6 @@ const photographerSchema = new mongoose.Schema({
     required: true,
   },
 
-  cityid:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "City",
-  },
 
   status: {
     type: String,

@@ -5,74 +5,83 @@ const jwt = require("jsonwebtoken");
 const tokenAuth = require("../middleware/tokenAuth");
 const User = require("../model/photographer");
 const { body, validationResult } = require("express-validator");
+const cityModal = require("../model/city");
+const photographerModal = require("../model/photographer");
+const user = require("../model/user");
 const router = express.Router();
+const JWT_SECRET = "thisissecratekey";
 
-
-router.post('/all', async(req,res)=>{
-    const users = await User.find()
-    res.send({error:false, users:users})
+router.get('/all', async(req,res)=>{
+    const photographers = await photographerModal.find()
+    res.send({error:false, photographers})
 })
 
 router.post('/signup', [
-    body('name', 'Please enter a valid name').not().isEmpty(),
-    body('email', 'Please enter a valid email').isEmail(),
-    body('password', 'Please enter a password with 6 or more characters').isLength({min: 6})
-], async(req,res)=>{
+    body('contact','Please enter a valid contact').isNumeric(),
+    body('shopadress', 'Please enter a valid shopadress').not().isEmpty(),
+    body('city', 'Please enter a valid city name').not().isEmpty(),
+],tokenAuth, async(req,res)=>{
     const errors = validationResult(req)
     if(!errors.isEmpty()){
         return res.status(400).json({error:true, message: errors.array()})
     }
-    const {name, email, password} = req.body
+    const {contact, shopadress, city} = req.body
     try {
-        let user = await User.findOne({email})
-        if(user){
-            return res.status(400).json({message: "User already exists"})
+        let userDatanew = await user.findById(userData.id)
+        let photographerexists = await photographerModal.findOne({email: user.email})
+        if(photographerexists){
+            return res.status(400).json({message: "Photographer already exists"})
         }
-        user = new User({
-            name,
-            email,
-            password
+        console.log(userDatanew)
+        const Photographer = new photographerModal({
+            userid: userDatanew._id,
+            name: userDatanew.name,
+            password: userDatanew.password,
+            email: userDatanew.email,
+            contact,
+            shopadress,
+            city
         })
-        const salt = await bcrypt.genSalt(10)
-        user.password = await bcrypt.hash(password, salt)
-        await user.save()
+        userDatanew.city = await cityModal.findOne({cityname: city}).id
+        console.log(userDatanew.city)
+        await Photographer.save()
 
         const payload = {
             user: {
                 id: user.id
             }
         }
-        jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 360000}, (err, token) => {
+        jwt.sign(payload, JWT_SECRET, {expiresIn: 360000}, (err, token) => {
             if(err) throw err
-            res.json({token})
+            res.json({error:false,token})
         })
     } catch (err) {
-        console.error(err.message)
-        res.status(500).send({error:true, message:'Server Error'})
+        console.error(err.message)  
+        res.status(500).send({error:true, error_message:err, message:'Server Error'})
     }
 })
 
 router.post('/login', async(req,res)=>{
     const {email, password} = req.body
     try {
-        let user = await User.findOne({email})
-        if(!user){
-            return res.status(400).json({error:true, message: "User does not exist"})
+        let photographerexists = await photographerModal.findOne({email})
+        if(!photographerexists){
+            return res.status(400).json({error:true, message: "photographer does not exist"})
         }
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password, photographerexists.password)
         if(!isMatch){
             return res.status(400).json({error:true, message: "Incorrect password"})
         }
         const payload = {
-            user: {
-                id: user.id
+            photographer: {
+                id: photographerexists.id
             }
         }
-        jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 360000}, (err, token) => {
+        jwt.sign(payload, JWT_SECRET, {expiresIn: 360000}, (err, token) => {
             if(err) throw err
-            res.json({token})
+            res.json({error:false,token})
         })
-    } catch (err) {
+    } catch (err){
         console.error(err.message)
         res.status(500).send({error:true, message:'Server Error'})
     }
@@ -80,8 +89,8 @@ router.post('/login', async(req,res)=>{
 
 router.get('/me', tokenAuth, async(req,res)=>{
     try {
-        const user = await User.findById(req.user.id)
-        res.send({user})
+        const Photographer = await photographerModal.findById(req.user.id)
+        res.send({Photographer})
     } catch (err) {
         console.error(err.message)
         res.status(500).send({error:true, message:'Server Error'})
@@ -90,10 +99,9 @@ router.get('/me', tokenAuth, async(req,res)=>{
 
 router.put('/update', tokenAuth, async(req,res)=>{
     try {
-        const user = await User.findById(req.user.id)
-        user.name = req.body.name
-        await user.save()
-        res.send({user})
+        const Photographer = await photographerModal.findById(req.user.id)
+        reqBody = {...req.body}
+
     } catch (err) {
         console.error(err.message)
         res.status(500).send({ error:true, message:'Server Error'})
@@ -102,8 +110,8 @@ router.put('/update', tokenAuth, async(req,res)=>{
 
 router.delete('/delete', tokenAuth, async(req,res)=>{
     try {
-        const user = await User.findById(req.user.id)
-        await user.remove()
+        const photographer = await photographerModal.findById(req.user.id)
+        await photographer.remove()
         res.send({error:false,message: "User deleted"})
     } catch (err) {
         console.error(err.message)

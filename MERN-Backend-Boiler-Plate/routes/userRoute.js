@@ -70,7 +70,7 @@ router.post('/login', async(req,res)=>{
         }
         jwt.sign(payload, JWT_SECRET, {expiresIn: 360000}, (err, token) => {
             if(err) throw err
-            res.json({error:"false",message:"user logged IN",token})
+            res.json({error:"false",message:"user logged IN", token})
         })
     } catch (err) {
         console.error(err.message)
@@ -88,29 +88,22 @@ router.get('/me', tokenAuth, async(req,res)=>{
     }
 })
 
-router.put('/update', tokenAuth, async(req,res)=>{
+router.put("/update", tokenAuth, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id)
-        user.name = req.body.name
-        await user.save()
-        res.send({user})
+        reqBody = {...req.body}
+        if (reqBody.password) {
+          const salt = await bcrypt.genSalt(10);
+          reqBody.password = await bcrypt.hash(reqBody.password, salt);
+        }
+        const user = await User.findByIdAndUpdate(userData.id, reqBody, {
+          new: true,
+        });
+      res.send({ user });
     } catch (err) {
-        console.error(err.message)
-        res.status(500).send({ error:true, message:'Server Error'})
+      console.error(err.message);
+      res.status(500).send({ error: true, message: "Server Error" });
     }
-})
-
-router.delete('/delete', tokenAuth, async(req,res)=>{
-    try {
-        const user = await User.findById(req.user.id)
-        await user.remove()
-        res.send({error:false,message: "User deleted"})
-    } catch (err) {
-        console.error(err.message)
-        res.status(500).send({ error:true, message:'Server Error'})
-    }
-})
-
+  });
 module.exports = router
 
 

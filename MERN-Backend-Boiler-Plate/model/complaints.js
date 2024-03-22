@@ -5,12 +5,18 @@ const complaintsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-
-    complaint: {
+    subject:{
         type: String,
         required: true
     },
-
+    message: {
+        type: String,
+        required: true
+    },
+    read:{
+        type: Boolean,
+        default: false
+    },
     created_at: {
         type: Date,
         default: Date.now
