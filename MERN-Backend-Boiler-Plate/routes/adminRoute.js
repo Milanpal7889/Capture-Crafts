@@ -9,6 +9,7 @@ const { findById, findOneAndDelete } = require("../model/user");
 const user = require("../model/user");
 const city = require("../model/city");
 const router = express.Router();
+const categoryModal = require("../model/category");
 
 router.get("/allcities", async (req, res) => {
   const Cities = await city.find();
@@ -23,6 +24,32 @@ router.get("/notificatons", tokenAuth, async (req, res) => {
       .json({ error: true, message: "You are not authorized" });
   }
   res.send({ error: false, message: "Notifications" });
+});
+
+router.post("/addcategory", tokenAuth, async (req, res) => {
+  const { categoryname } = req.body;
+  try {
+    const userRole = await user.findById(userData.id);
+    if(userRole.role !== "admin") {
+      return res
+        .status(400)
+        .json({ error: true, message: "You are not authorized" });
+    }
+    let category = await categoryModal.findOne({ categoryname });
+    if (category) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Category already exists" });
+    }
+    category = new categoryModal({
+      categoryname,
+    });
+    await category.save();
+    res.send({ error: false, message: "Category created successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send({ error: true, message: "Server Error" });
+  }
 });
 
 router.post("/addcity", tokenAuth, async (req, res) => {

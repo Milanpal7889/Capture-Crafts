@@ -25,6 +25,17 @@ const customerSchema = new mongoose.Schema({
         required: true,
     },
 
+    cityid: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "City",
+    },
+
+    photographerid: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Photographer",
+        default: null
+    },
+
     userid: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
