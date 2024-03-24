@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const tokenAuth = require("../middleware/tokenAuth");
+const { adminAuth } = require("../middleware/tokenAuth");
 const City = require("../model/city");
 const { body, validationResult } = require("express-validator");
 const { findById, findOneAndDelete } = require("../model/user");
@@ -13,10 +13,14 @@ const categoryModal = require("../model/category");
 
 router.get("/allcities", async (req, res) => {
   const Cities = await city.find();
-  res.send({ error: false, Cities });
+  res.send({ error: false, Data: Cities });
+});
+router.get("/allusers", async (req, res) => {
+  const users = await user.find();
+  res.send({ error: false, users });
 });
 
-router.get("/notificatons", tokenAuth, async (req, res) => {
+router.get("/notificatons", async (req, res) => {
   const userRole = await user.findById(userData.id);
   if(userRole.role !== "admin") {
     return res
@@ -26,7 +30,7 @@ router.get("/notificatons", tokenAuth, async (req, res) => {
   res.send({ error: false, message: "Notifications" });
 });
 
-router.post("/addcategory", tokenAuth, async (req, res) => {
+router.post("/addcategory", adminAuth, async (req, res) => {
   const { categoryname } = req.body;
   try {
     const userRole = await user.findById(userData.id);
@@ -52,8 +56,8 @@ router.post("/addcategory", tokenAuth, async (req, res) => {
   }
 });
 
-router.post("/addcity", tokenAuth, async (req, res) => {
-  const { cityname } = req.body;
+router.post("/addcity", adminAuth, async (req, res) => {
+  const { cityname, updateData } = req.body;
   try {
     const userRole = await user.findById(userData.id);
     if(userRole.role !== "admin") {
@@ -69,6 +73,7 @@ router.post("/addcity", tokenAuth, async (req, res) => {
     }
     city = new City({
       cityname,
+      updateData,
     });
     await city.save();
     res.send({ error: false, message: "City created successfully" });
@@ -78,7 +83,19 @@ router.post("/addcity", tokenAuth, async (req, res) => {
   }
 });
 
-router.delete("/removecity", tokenAuth, async (req, res) => {
+router.put("/updatecity", adminAuth, async(req, res) => {
+  try{
+    const reqBody = {...req.body}
+    const city = await City.findOneAndUpdate( { cityname: reqBody.cityname }, reqBody.updateData)
+    res.send({ error: false,data: city, message: "City updated successfully" });
+  }
+  catch(err) {
+    console.error(err.message);
+    res.status(500).send({ error: true, message: "Server Error" });
+  }
+})
+
+router.delete("/removecity", adminAuth, async (req, res) => {
   const { cityname } = req.body;
   try {
     const userRole = await user.findById(userData.id);
@@ -101,7 +118,7 @@ router.delete("/removecity", tokenAuth, async (req, res) => {
   }
 });
 
-router.delete("/deletephotographer", tokenAuth, async (req, res) => {
+router.delete("/deletephotographer", adminAuth, async (req, res) => {
   const { id } = req.body;
   try {
     const userRole = await user.findById(userData.id);

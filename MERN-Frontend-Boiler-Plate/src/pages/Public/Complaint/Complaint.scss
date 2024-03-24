@@ -1,0 +1,18 @@
+
+
+.complaint-form{
+    width: 50%;
+    text-align: center;
+    margin-block: 4rem;
+    padding: 1.5rem;
+    background-color: whitesmoke;
+    h1{
+        margin-block: 2rem;
+    }
+    button{
+        margin-top: 1rem;
+    }
+    @media screen and (max-width: 768px) {
+        width: 80%;
+    }
+}

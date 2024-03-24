@@ -25,7 +25,7 @@ router.post('/signup', [
     if(!errors.isEmpty()){
         return res.status(400).json({error:true, message: errors.array()})
     }
-    const {contact, shopadress, city} = req.body
+    const {contact, image, shopadress, city, price} = req.body
     try {
         let userDatanew = await user.findById(userData.id)
         let photographerexists = await photographerModal.findOne({email: user.email})
@@ -40,7 +40,9 @@ router.post('/signup', [
             email: userDatanew.email,
             contact,
             shopadress,
-            city
+            city,
+            image,
+            price
         })
         userDatanew.city = await cityModal.findOne({cityname: city}).id
         console.log(userDatanew.city)
@@ -110,9 +112,8 @@ router.put('/update', tokenAuth, async(req,res)=>{
 
 router.delete('/delete', tokenAuth, async(req,res)=>{
     try {
-        const photographer = await photographerModal.findById(req.user.id)
-        await photographer.remove()
-        res.send({error:false,message: "User deleted"})
+        const photographer = await photographerModal.findByIdAndDelete(req.user.id)
+        res.send({error:false, userData:photographer, message: "User deleted"})
     } catch (err) {
         console.error(err.message)
         res.status(500).send({ error:true, message:'Server Error'})

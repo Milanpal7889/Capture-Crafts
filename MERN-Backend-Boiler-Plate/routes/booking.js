@@ -17,12 +17,14 @@ router.get("/all", async (req, res) => {
     res.send({ error: false, bookings });
 })
 
-router.post("/bookcity", tokenAuth, async (req, res) => {
-    const { city, photographer } = req.body;
+router.post("/booking", tokenAuth, async (req, res) => {
+    const { city, photographer, address } = req.body;
     try {
         const booking = new bookingModal({
+            userid: userData.id,
             city,
-            photographer
+            photographer,
+            address
         })
         await booking.save();
         res.send({ error: false, message: "Booking created successfully" });

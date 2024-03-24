@@ -1,41 +1,32 @@
 const mongoose = require("mongoose");
 const multer = require("multer");
-const { GridFsStorage } = require("multer-gridfs-storage");
-
+const path = require("path");
 mongoDBurl =
   "mongodb+srv://milanpaul212:milanpaul212@bookstore-backend.0dbc4xx.mongodb.net/?retryWrites=true&w=majority&appName=Bookstore-backend";
 
-const conn = mongoose.createConnection(mongoDBurl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// Initialize GridFS
-let gfs;
-conn.once("open", () => {
-  console.log("MongoDB database connection established successfully");
-  gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "uploads" });
-});
+  const conn = () => {
+    return mongoose
+      .connect(mongoDBurl, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
+      .then(() => console.log("MongoDB connected"))
+      .catch((err) => console.log("error connecting to MongoDB: ", err));
+  };
 
 // creating storage 
-const storage = new GridFsStorage({
-  url: mongoDBurl,
-  file: (req, file) => {
-      return new Promise((resolve, reject) => {
-          const filename = file.originalname;
-          const fileInfo = {
-              filename: filename,
-              bucketName: 'uploads',
-          };
-          resolve(fileInfo);
-      });
-  }
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
 })
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 module.exports = {
   conn,
-  gfs,
   upload
 }

@@ -3,7 +3,8 @@ const app = express()
 const cors = require("cors")
 const server = require("http").Server(app)
 const routes = require("./routes")
-require("./startup/db")
+const {conn} = require("./startup/db")
+conn()
 const initialize = () => {
   const PORT = process.env.PORT || 5000;
   app.use(cors())

@@ -6,11 +6,15 @@ const photographerSchema = new mongoose.Schema({
     ref: "User",
   },
 
-  cityid:{
+  cityid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "City",
   },
-  
+
+  Image: {
+    type: String,
+  },
+
   name: {
     type: String,
     required: true,
@@ -37,6 +41,10 @@ const photographerSchema = new mongoose.Schema({
     required: true,
   },
 
+  price: {
+    type: Number,
+    required: true,
+  },
 
   status: {
     type: String,
@@ -51,6 +59,6 @@ const photographerSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-})
+});
 
-module.exports = mongoose.model("Photographer", photographerSchema)
+module.exports = mongoose.model("Photographer", photographerSchema);

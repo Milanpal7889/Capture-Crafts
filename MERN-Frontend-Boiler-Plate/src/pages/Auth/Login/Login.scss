@@ -25,4 +25,10 @@
     color: black;
     border: 1px solid $primary;
   }
+  @media screen and (max-width: 768px) {
+    .custom-form-login {
+      width: 80%;
+    }
+    
+  }
 }

@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const tokenAuth = require('../middleware/tokenAuth')
+const {tokenAuth} = require('../middleware/tokenAuth')
 const User = require('../model/user')
 const { body, validationResult } = require('express-validator')
 const router = express.Router()
@@ -70,7 +70,7 @@ router.post('/login', async(req,res)=>{
         }
         jwt.sign(payload, JWT_SECRET, {expiresIn: 360000}, (err, token) => {
             if(err) throw err
-            res.json({error:"false",message:"user logged IN", token})
+            res.json({error:"false", message:"user logged IN", user, token})
         })
     } catch (err) {
         console.error(err.message)
@@ -104,6 +104,16 @@ router.put("/update", tokenAuth, async (req, res) => {
       res.status(500).send({ error: true, message: "Server Error" });
     }
   });
+
+router.delete('/delete', async(req,res)=>{
+    try {
+        const user = await User.findByIdAndDelete(req.body.id)
+        res.send({error:false,message: "User deleted"})
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).send({ error:true, message:'Server Error'})
+    }
+})
 module.exports = router
 
 

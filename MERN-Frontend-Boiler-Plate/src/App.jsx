@@ -9,6 +9,7 @@ import { Signup } from './pages/Auth/Signup/Signup'
 import { Aboutus } from './pages/Public/Aboutus/Aboutus'
 import { Footer } from './commonComponents/Footer/Footer'
 import { Photographers } from './pages/Public/Photographers/Photographers'
+import Complaint from './pages/Public/Complaint/Complaint'
 function App() {
   const routes = [
     {
@@ -41,6 +42,11 @@ function App() {
       exact: true,
       component: <Signup/>,
     },
+    {
+      path: "/complaint",
+      exact: true,
+      component: <Complaint/>,
+    }
   ]
   return (
   <>

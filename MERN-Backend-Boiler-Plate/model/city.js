@@ -6,6 +6,11 @@ const citySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
+    citydesc: {
+        type: String,
+        required: true
+    },
     
     status: String,
     
