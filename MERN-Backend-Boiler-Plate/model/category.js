@@ -8,8 +8,8 @@ const categorySchema = new mongoose.Schema({
     },
     
     imageUrl: {
-        data: Buffer,
-        contentType: String
+        type: String,
+        required: true
     },
 
     status: String,

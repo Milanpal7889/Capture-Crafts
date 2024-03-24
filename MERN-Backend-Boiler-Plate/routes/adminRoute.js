@@ -1,44 +1,38 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { adminAuth } = require("../middleware/tokenAuth");
-const City = require("../model/city");
-const { body, validationResult } = require("express-validator");
-const { findById, findOneAndDelete } = require("../model/user");
-const user = require("../model/user");
-const city = require("../model/city");
-const router = express.Router();
+const CityModal = require("../model/city");
+const userModal = require("../model/user");
+const path = require('path')
 const categoryModal = require("../model/category");
+const { upload } = require("../startup/db");
+const fs = require('fs');
+const uploadsDir = path.join(__dirname, '../uploads');
 
-router.get("/allcities", async (req, res) => {
-  const Cities = await city.find();
-  res.send({ error: false, Data: Cities });
-});
+const router = express.Router();
+
+
 router.get("/allusers", async (req, res) => {
-  const users = await user.find();
+  const users = await userModal.find();
   res.send({ error: false, users });
 });
 
-router.get("/notificatons", async (req, res) => {
-  const userRole = await user.findById(userData.id);
-  if(userRole.role !== "admin") {
-    return res
-      .status(400)
-      .json({ error: true, message: "You are not authorized" });
-  }
-  res.send({ error: false, message: "Notifications" });
+// category routes
+router.get("/allcategories", async (req, res) => {
+  const categories = await categoryModal.find();
+  res.send({ error: false, categories });
 });
 
-router.post("/addcategory", adminAuth, async (req, res) => {
+router.post("/addcategory", upload.single('image'), adminAuth, async (req, res) => {
   const { categoryname } = req.body;
   try {
-    const userRole = await user.findById(userData.id);
-    if(userRole.role !== "admin") {
+    if(!req.file) {
       return res
         .status(400)
-        .json({ error: true, message: "You are not authorized" });
+        .json({ error: true, message: "Please upload an image" });
     }
+    const fileName = req.file.originalname;
+
     let category = await categoryModal.findOne({ categoryname });
     if (category) {
       return res
@@ -47,6 +41,7 @@ router.post("/addcategory", adminAuth, async (req, res) => {
     }
     category = new categoryModal({
       categoryname,
+      imageUrl: fileName
     });
     await category.save();
     res.send({ error: false, message: "Category created successfully" });
@@ -56,24 +51,73 @@ router.post("/addcategory", adminAuth, async (req, res) => {
   }
 });
 
-router.post("/addcity", adminAuth, async (req, res) => {
-  const { cityname, updateData } = req.body;
+router.put("/updatecategory",upload.single('image'), adminAuth, async (req, res) => {
+  const { id, categoryname } = req.body;
   try {
-    const userRole = await user.findById(userData.id);
-    if(userRole.role !== "admin") {
+    const category = await categoryModal.findById(id);
+    if (!category) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Category not found" });
+    }
+    if(req.file) {
+      const fileName = req.file.originalname;
+      fs.renameSync(path.join(uploadsDir, category.imageUrl), path.join(uploadsDir, fileName));
+      category.imageUrl = fileName;
+    }
+    if(categoryname){
+      category.categoryname = categoryname;
+    }
+    await category.save();
+    res.send({ error: false, message: "Category updated successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send({ error: true, message: "Server Error" });
+  }
+});
+
+router.delete("/removecategory", adminAuth, async (req, res) => {
+  const { id } = req.body;
+  try {
+    const category = await categoryModal.findById(id);
+    if (!category) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Category not found" });
+    }
+    await categoryModal.findByIdAndDelete(id);
+    res.send({ error: false, data:category, message: "Category removed successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send({ error: true, message: "Server Error" });
+  }
+});
+
+
+// city routes
+router.get("/allcities", async (req, res) => {
+  const Cities = await CityModal.find();
+  res.send({ error: false, Data: Cities });
+});
+
+router.post("/addcity", adminAuth, async (req, res) => {
+  const { cityname, citydesc } = req.body;
+  try {
+    const userRole = await userModal.findById(userData.id);
+    if (userRole.role !== "admin") {
       return res
         .status(400)
         .json({ error: true, message: "You are not authorized" });
     }
-    let city = await City.findOne({ cityname });
+    let city = await CityModal.findOne({ cityname });
     if (city) {
       return res
-        .status(400)
-        .json({ error: true, message: "City already exists" });
+        .status(600)
+        .json({ error: true, exists: true, message: "City already exists" });
     }
-    city = new City({
+    city = new CityModal({
       cityname,
-      updateData,
+      citydesc,
     });
     await city.save();
     res.send({ error: false, message: "City created successfully" });
@@ -83,46 +127,54 @@ router.post("/addcity", adminAuth, async (req, res) => {
   }
 });
 
-router.put("/updatecity", adminAuth, async(req, res) => {
-  try{
-    const reqBody = {...req.body}
-    const city = await City.findOneAndUpdate( { cityname: reqBody.cityname }, reqBody.updateData)
-    res.send({ error: false,data: city, message: "City updated successfully" });
-  }
-  catch(err) {
-    console.error(err.message);
-    res.status(500).send({ error: true, message: "Server Error" });
-  }
-})
-
-router.delete("/removecity", adminAuth, async (req, res) => {
-  const { cityname } = req.body;
+router.put('/updatecity/:id', adminAuth, async (req, res) => {
   try {
-    const userRole = await user.findById(userData.id);
-    if(userRole.role !== "admin") {
-      return res
-        .status(400)
-        .json({ error: true, message: "You are not authorized" });
-    }
-    let city = await City.findOne({ cityname });
-    if (!city) {
-      return res
-        .status(400)
-        .json({ error: true, message: "City does not exist" });
-    }
-    city = await City.findOneAndDelete({ cityname });
-    res.send({ error: false, message: "City deleted successfully" });
+    const reqBody = { ...req.body };
+    const id = req.params.id;
+    const cityData = reqBody;
+    const city = await CityModal.findByIdAndUpdate(id, cityData, { new: true });
+    res.send({
+      error: false,
+      data: city,
+      message: "City updated successfully",
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send({ error: true, message: "Server Error" });
   }
 });
 
+router.delete("/removecity/:id", adminAuth, async (req, res) => {
+  const { cityname } = req.body;
+  const id = req.params.id;
+  try {
+    const userRole = await userModal.findById(userData.id);
+    if (userRole.role !== "admin") {
+      return res
+        .status(400)
+        .json({ error: true, message: "You are not authorized" });
+    }
+    let city = await CityModal.findById(id);
+    if (!city) {
+      return res
+        .status(400)
+        .json({ error: true, message: "City does not exist" });
+    }
+    city = await CityModal.findByIdAndDelete(id);
+    res.send({ error: false,data: city, message: "City deleted successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send({ error: true, message: "Server Error" });
+  }
+});
+
+
+// photographer routes
 router.delete("/deletephotographer", adminAuth, async (req, res) => {
   const { id } = req.body;
   try {
     const userRole = await user.findById(userData.id);
-    if(userRole.role !== "admin") {
+    if (userRole.role !== "admin") {
       return res
         .status(400)
         .json({ error: true, message: "You are not authorized" });

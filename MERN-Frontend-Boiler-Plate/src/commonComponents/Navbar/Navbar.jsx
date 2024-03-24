@@ -14,8 +14,8 @@ const navlinks = [
     link: "/cities",
   },
   {
-    name: "Photographers",
-    link: "/photographers",
+    name: "Categories",
+    link: "/Categories",
   },
   {
     name: "About Us",

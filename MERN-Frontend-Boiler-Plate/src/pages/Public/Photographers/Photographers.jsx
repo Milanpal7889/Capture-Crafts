@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { Photographer } from "../../../customComponents/Photographer-Card/Photographer";
+import { Photographer } from "../../../commonComponents/CompoCard/CardCompo";
 import "./Photographers.scss";
 export const Photographers = () => {
   return (

@@ -3,16 +3,38 @@ import "./City.scss";
 import img1 from "../../assets/images/award-1-134x98-inverse.png";
 import { useState } from "react";
 import PropTypes from "prop-types";
-
+import axiosConfig from "../../helper/config";
 export const City = (city) => {
   const [show, setShow] = useState(false);
   const [cityData, setCitysData] = useState(city.citysprop);
-  const HandleSubmit = (e) => {
-    e.preventDefault();
+  const Deletecity = async () => {
     try {
-      console.log("something is wrong")
+      const response = await axiosConfig.delete(
+        `/admin/removecity/${cityData._id}`
+      );
+      if (!response?.data?.error) {
+        const citysDatares = await response?.data;
+        window.location.reload();
+        console.log(citysDatares.data);
+      }
     } catch (err) {
       console.error( {error:true, message: "Server Error" ,errorMessage: err.message});
+    }
+  };
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosConfig.put(`/admin/updatecity/${cityData._id}`,{
+        cityData
+      },
+        )
+      if (!response?.data?.error) {
+        const citysDatares = await response?.data;
+        console.log(citysDatares.data);
+      }
+      setShow(false);
+    } catch (err) {
+      console.error( {error:true, message: "froentend Server Error" ,errorMessage: err.message});
     }
   };
   return (
@@ -39,7 +61,7 @@ export const City = (city) => {
               <Form.Label>City Desc</Form.Label>
               <Form.Control
                 onChange={(e) =>
-                  setCitysData({ ...cityData, cityname: e.target.value })
+                  setCitysData({ ...cityData, citydesc: e.target.value })
                 }
                 value={cityData.citydesc}
                 type="text"
@@ -69,7 +91,7 @@ export const City = (city) => {
           >
             Edit City
           </Button>
-          <Button variant="primary">Delete City</Button>
+          <Button onClick={Deletecity} variant="primary">Delete City</Button>
         </Card.Body>
       </Card>
     </>

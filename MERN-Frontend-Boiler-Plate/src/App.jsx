@@ -8,7 +8,7 @@ import {Login} from './pages/Auth/Login/Login'
 import { Signup } from './pages/Auth/Signup/Signup'
 import { Aboutus } from './pages/Public/Aboutus/Aboutus'
 import { Footer } from './commonComponents/Footer/Footer'
-import { Photographers } from './pages/Public/Photographers/Photographers'
+import { Categories } from './pages/Public/Categories/Categories'
 import Complaint from './pages/Public/Complaint/Complaint'
 function App() {
   const routes = [
@@ -23,9 +23,9 @@ function App() {
       component: <Citys/>,
     },
     {
-      path: "/photographers",
+      path: "/categories",
       exact: true,
-      component: <Photographers/>,
+      component: <Categories />,
     },
     {
       path: "/aboutus",

@@ -10,7 +10,7 @@ const ToastBs = ({ message, type }) => {
   return (
     <ToastContainer position="top-end" className="p-3">
       <Toast bg={type} show={showToast} onClose={() => setShowToast(false)} delay={3000}>
-        <Toast.Body>{message}</Toast.Body>
+        <Toast.Body className="text-light">{message}</Toast.Body>
       </Toast>
     </ToastContainer>
   );

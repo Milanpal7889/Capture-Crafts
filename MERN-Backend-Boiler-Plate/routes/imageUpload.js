@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { upload, gfs } = require('../startup/db')
+const { upload } = require('../startup/db')
 const path = require('path');
 const fs = require('fs');
 const uploadsDir = path.join(__dirname, '../uploads');
-const router = express.Router();
+const router = express.Router(); 
 
 router.post('/upload', upload.single('image'), (req, res) => {
     if(!req.file) {
