@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import axiosConfig from "../../../helper/config";
 import ToastBs from "../../../commonComponents/Toast/Toast";
 import FormData from "form-data";
+import { useContext } from "react";
+import AppContext from "../../../context/AppContext";
+
 export const Citys = () => {
+  const { state } = useContext(AppContext);
   const [error, setError] = useState(false);
   const [citysData, setCitysData] = useState([]);
   const [createCity, setCreateCity] = useState({
@@ -19,18 +23,16 @@ export const Citys = () => {
     if (loggedIn) {
       window.location.href = "/login";
     }
-  }, []);
+  }, [loggedIn]);
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData()
-      formData.append("image",file)
-      formData.append("cityname",createCity.cityname)
-      formData.append("citydesc",createCity.citydesc)
-      const response = await axiosConfig.post("/admin/addcity", 
-      formData
-      );
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("cityname", createCity.cityname);
+      formData.append("citydesc", createCity.citydesc);
+      const response = await axiosConfig.post("/admin/addcity", formData);
       if (!response?.data?.error) {
         const createcityDatares = await response?.data;
         console.log(createcityDatares);
@@ -72,7 +74,7 @@ export const Citys = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={HandleSubmit}>
-          <Form.Group className="mb-3" controlId="image">
+            <Form.Group className="mb-3" controlId="image">
               <Form.Label>Image</Form.Label>
               <Form.Control
                 onChange={(e) => setFile(e.target.files[0])}
@@ -83,7 +85,7 @@ export const Citys = () => {
             <Form.Group className="mb-3" controlId="cityName">
               <Form.Label>City Name</Form.Label>
               <Form.Control
-              required
+                required
                 onChange={(e) =>
                   setCreateCity({ ...createCity, cityname: e.target.value })
                 }
@@ -119,11 +121,13 @@ export const Citys = () => {
           <Col>
             <h1 className="heading">Cities</h1>
           </Col>
-          <Col className="text-end">
-            <button onClick={() => setShow(true)} className="btn btn-primary">
-              Create City
-            </button>
-          </Col>
+          {state.role === "admin" && (
+            <Col className="text-end">
+              <button onClick={() => setShow(true)} className="btn btn-primary">
+                Create City
+              </button>
+            </Col>
+          )}
         </Row>
         <Row>
           {citysData.map((city) => (

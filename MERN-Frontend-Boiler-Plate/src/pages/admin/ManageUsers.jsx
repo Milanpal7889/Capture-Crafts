@@ -7,13 +7,14 @@ import { useEffect, useState } from "react";
 const ManageUsers = () => {
   //   const [error, setError] = useState(false);
   const [users, setUsers] = useState([]);
+  const [bookings, setBookings] = useState([]);
 
   const loggedIn = localStorage?.getItem("user") ? false : true;
   useEffect(() => {
     if (loggedIn) {
       window.location.href = "/login";
     }
-  }, []);
+  }, [loggedIn]);
   const deleteuser = async (id) => {
     try {
       const response = await axiosConfig.delete(
@@ -48,8 +49,25 @@ const ManageUsers = () => {
         setUsers([]);
       }
     };
+    const fetchBookings = async() => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/admin/allbookings"
+        );
+        if (response?.data && !response.data.error) {
+          const bookingsresData = response?.data;
+          setBookings(bookingsresData?.bookings || []);
+        } else {
+          setBookings([]);
+        }
+      } catch (error) {
+        console.log(error?.message);
+        setBookings([]);
+      }
+    }
 
     fetchdata();
+    fetchBookings();
   }, []);
   return (
     <>
@@ -62,7 +80,7 @@ const ManageUsers = () => {
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="/" to="/something" as={NavLink}>
+              <Nav.Link eventKey="/managebookings" to="/managebookings" as={NavLink}>
                 Manage Booking
               </Nav.Link>
             </Nav.Item>
@@ -130,7 +148,7 @@ export const ManageBooking = () => {
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="/something" to="/something" as={NavLink}>
+            <Nav.Link eventKey="/managebookings" to="/managebookings" as={NavLink}>
               Manage Booking
             </Nav.Link>
           </Nav.Item>

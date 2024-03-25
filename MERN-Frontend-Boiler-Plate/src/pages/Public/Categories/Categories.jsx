@@ -1,12 +1,14 @@
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import "./Categories.scss";
 import { CardCompo } from "../../../commonComponents/CompoCard/CardCompo";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import ToastBs from "../../../commonComponents/Toast/Toast";
 import axiosConfig from "../../../helper/config";
+import AppContext from "../../../context/AppContext";
 
 export const Categories = () => {
+  const { state } = useContext(AppContext);
   const [categories, setCategories] = useState([]);
   const [show, setShow] = useState(false);
   const [error, setError] = useState(false);
@@ -19,14 +21,17 @@ export const Categories = () => {
     if (loggedIn) {
       window.location.href = "/login";
     }
-  }, []);
+  }, [loggedIn]);
   const HandleSubmit = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
       formData.append("image", file);
       formData.append("categoryname", createCategory.categoryname);
-      const response = await axiosConfig.post("http://localhost:5000/api/admin/addcategory", formData);
+      const response = await axiosConfig.post(
+        "http://localhost:5000/api/admin/addcategory",
+        formData
+      );
       if (response?.data && !response.data.error) {
         const categoryDatares = response?.data;
         console.log(categoryDatares);
@@ -104,9 +109,11 @@ export const Categories = () => {
           <Col>
             <h1 className="heading">Categories</h1>
           </Col>
-          <Col className="text-end">
-            <Button onClick={() => setShow(true)}> create Category </Button>
-          </Col>
+          {state.role === "admin" && (
+            <Col className="text-end">
+              <Button onClick={() => setShow(true)}> create Category </Button>
+            </Col>
+          )}
         </Row>
         <Row className="my-4">
           {categories.map((category) => {

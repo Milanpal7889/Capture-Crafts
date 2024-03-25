@@ -11,7 +11,7 @@ const photographerSchema = new mongoose.Schema({
     ref: "City",
   },
 
-  Image: {
+  ImageUrl: {
     type: String,
   },
 
@@ -43,7 +43,6 @@ const photographerSchema = new mongoose.Schema({
 
   price: {
     type: Number,
-    required: true,
   },
 
   status: {

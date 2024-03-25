@@ -1,5 +1,4 @@
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
-import "./Login.scss";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +6,8 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import ToastBs from "../../../commonComponents/Toast/Toast";
 import AppContext from "../../../context/AppContext";
-export const Login = () => {
+import "./JoinPhotographer.scss";
+ const Joinphotographer = () => {
   const {login} = useContext(AppContext)
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ export const Login = () => {
   if (isLoggedIn) {
     navigate("/");
   }
-  const [userData, setUserData] = useState({ email: "", password: "" });
+  const [userData, setUserData] = useState({ contact: "", shopadress: "" });
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -48,7 +48,7 @@ export const Login = () => {
         }
       <Container className="login-form">
         <Form onSubmit={handleSubmit} className="custom-form-login shadow">
-          <h1 className="heading">Login</h1>
+          <h1 className="heading">Join as a Photographer</h1>
           <Form.Group className="mb-3">
             <InputGroup className="form-input">
               <InputGroup.Text>
@@ -61,10 +61,10 @@ export const Login = () => {
                     [e.target.name]: e.target.value,
                   }));
                 }}
-                type="email"
-                name="email"
-                value={userData.email}
-                placeholder="Enter email"
+                type="number"
+                name="contact"
+                value={userData.contact}
+                placeholder="Enter contact number"
                 required
               />
             </InputGroup>
@@ -81,17 +81,17 @@ export const Login = () => {
                     [e.target.name]: e.target.value,
                   }));
                 }}
-                type="password"
-                name="password"
-                value={userData.password}
-                placeholder="Password"
+                type="text"
+                name="adress"
+                value={userData.shopadress}
+                placeholder="Enter Shop Adress"
                 required
               />
             </InputGroup>
           </Form.Group>
           <Form.Group className="mb-3">
             <Button type="submit" className="btn btn-primary" as="button">
-              Login
+              Join
             </Button>
           </Form.Group>
         </Form>
@@ -99,3 +99,5 @@ export const Login = () => {
     </>
   );
 };
+
+export default Joinphotographer

@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { Photographer } from "../../../commonComponents/CompoCard/CardCompo";
 import "./Photographers.scss";
+import Photographer from "../../../customComponents/Photographer/Photographer";
 export const Photographers = () => {
   return (
     <Container className="Photographers">
@@ -8,27 +8,6 @@ export const Photographers = () => {
         <h1 className="heading">Photographers</h1>
       </Row>
       <Row>
-        <Col sm={12} md={4} lg={3}>
-          <Photographer />
-        </Col>
-        <Col sm={12} md={4} lg={3}>
-          <Photographer />
-        </Col>
-        <Col sm={12} md={4} lg={3}>
-          <Photographer />
-        </Col>
-        <Col sm={12} md={4} lg={3}>
-          <Photographer />
-        </Col>
-        <Col sm={12} md={4} lg={3}>
-          <Photographer />
-        </Col>
-        <Col sm={12} md={4} lg={3}>
-          <Photographer />
-        </Col>
-        <Col sm={12} md={4} lg={3}>
-          <Photographer />
-        </Col>
         <Col sm={12} md={4} lg={3}>
           <Photographer />
         </Col>

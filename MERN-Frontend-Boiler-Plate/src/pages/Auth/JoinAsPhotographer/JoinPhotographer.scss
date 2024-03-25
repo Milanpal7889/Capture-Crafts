@@ -1,0 +1,34 @@
+@import "../../../globalStyles/color.scss";
+.login-form {
+    margin-block: 6rem;
+    margin-bottom: 10rem;
+  .heading {
+    text-align: center;
+    color: $primary;
+    margin-bottom: 4rem;
+  }
+  .custom-form-login {
+    background-color: whitesmoke;
+    padding: 4rem;
+    padding-top: 1rem;
+    width: 40%;
+    margin-inline: auto;
+  }
+  .form-input {
+    color: black;
+  }
+  .icon{
+    color: $primary;
+  }
+  .btn.btn-primary:hover{
+    background-color: $primary;
+    color: black;
+    border: 1px solid $primary;
+  }
+  @media screen and (max-width: 768px) {
+    .custom-form-login {
+      width: 80%;
+    }
+    
+  }
+}

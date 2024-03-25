@@ -1,11 +1,13 @@
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import "./City.scss";
 // import img1 from "../../assets/images/award-1-134x98-inverse.png";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import axiosConfig from "../../helper/config";
 import FormData from "form-data";
+import AppContext from "../../context/AppContext";
 export const City = (city) => {
+  const { state } = useContext(AppContext);
   const [show, setShow] = useState(false);
   const [cityData, setCitysData] = useState(city.citysprop);
   const [file, setFile] = useState(null);
@@ -103,20 +105,38 @@ export const City = (city) => {
         </Modal.Body>
       </Modal>
       <Card className="city-card">
-        <Card.Img variant="top" src={`http://localhost:5000/api/image/${cityData.imageUrl}`} />
+        <Card.Img
+          variant="top"
+          src={`http://localhost:5000/api/image/${cityData.imageUrl}`}
+        />
         <Card.Body>
           <Card.Title>{cityData.cityname}</Card.Title>
           <Card.Text>{cityData.citydesc}</Card.Text>
-          <Button
-            variant="primary"
-            onClick={() => setShow(true)}
-            className="me-1"
-          >
-            Edit City
-          </Button>
-          <Button onClick={Deletecity} variant="primary">
-            Delete City
-          </Button>
+          {state.role == "admin" && (
+            <>
+              <Button
+                variant="primary"
+                onClick={() => setShow(true)}
+                className="me-1"
+              >
+                Edit City
+              </Button>
+              <Button onClick={Deletecity} variant="primary">
+                Delete City
+              </Button>
+            </>
+          )}
+          {state.role !== "admin" && (
+            <>
+              <Button
+                variant="primary"
+                onClick={() => console.log("cityBooked")}
+                className="me-1"
+              >
+                BookCity
+              </Button>
+            </>
+          )}
         </Card.Body>
       </Card>
     </>

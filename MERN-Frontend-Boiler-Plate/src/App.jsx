@@ -12,6 +12,9 @@ import { Categories } from './pages/Public/Categories/Categories'
 import Complaint from './pages/Public/Complaint/Complaint'
 import ManageUsers from './pages/admin/ManageUsers'
 import { ManageBooking } from './pages/admin/ManageUsers'
+import AppState from './context/AppState'
+import { Photographers } from './pages/Public/Photographers/Photographers'
+import Joinphotographer from './pages/Auth/JoinAsPhotographer/JoinPhotographer'
 function App() {
   const routes = [
     {
@@ -52,21 +55,27 @@ function App() {
     {
       path: "/manageall",
       exact: true,
-      component: < ManageUsers/> ,
+      component: <ManageUsers/> ,
     },
     {
-      path: "/*",
+      path: "/photographers",
       exact: true,
-      component: <div>url not found <br/> Error 404</div>,
+      component: <Photographers/>,
     },
     {
-      path: "/something",
+      path: "/managebookings",
       exact: true,
       component: <ManageBooking/>,
+    },
+    {
+      path: "/joinphotographer",
+      exact: true,
+      component: <Joinphotographer />,
     }
   ]
   return (
   <>
+  <AppState>
     <BrowserRouter>
     <NavbarBs/>
     <Routes>
@@ -83,6 +92,7 @@ function App() {
     </Routes>
     <Footer/>
     </BrowserRouter>
+  </AppState>
   </>
   )
 }
