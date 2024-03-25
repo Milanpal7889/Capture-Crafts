@@ -1,12 +1,14 @@
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import "./City.scss";
-import img1 from "../../assets/images/award-1-134x98-inverse.png";
+// import img1 from "../../assets/images/award-1-134x98-inverse.png";
 import { useState } from "react";
 import PropTypes from "prop-types";
 import axiosConfig from "../../helper/config";
+import FormData from "form-data";
 export const City = (city) => {
   const [show, setShow] = useState(false);
   const [cityData, setCitysData] = useState(city.citysprop);
+  const [file, setFile] = useState(null);
   const Deletecity = async () => {
     try {
       const response = await axiosConfig.delete(
@@ -18,23 +20,38 @@ export const City = (city) => {
         console.log(citysDatares.data);
       }
     } catch (err) {
-      console.error( {error:true, message: "Server Error" ,errorMessage: err.message});
+      console.error({
+        error: true,
+        message: "Server Error",
+        errorMessage: err.message,
+      });
     }
   };
   const HandleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosConfig.put(`/admin/updatecity/${cityData._id}`,{
-        cityData
-      },
-        )
+      const formData = new FormData();
+      if (file) {
+        formData.append("image", file);
+      }
+      formData.append("cityname", cityData.cityname);
+      formData.append("citydesc", cityData.citydesc);
+      const response = await axiosConfig.put(
+        `/admin/updatecity/${cityData._id}`,
+        formData
+      );
       if (!response?.data?.error) {
+        window.location.reload(true);
         const citysDatares = await response?.data;
         console.log(citysDatares.data);
       }
       setShow(false);
     } catch (err) {
-      console.error( {error:true, message: "froentend Server Error" ,errorMessage: err.message});
+      console.error({
+        error: true,
+        message: "froentend Server Error",
+        errorMessage: err,
+      });
     }
   };
   return (
@@ -45,6 +62,14 @@ export const City = (city) => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={HandleSubmit}>
+            <Form.Group className="mb-3" controlId="image">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                onChange={(e) => setFile(e.target.files[0])}
+                type="file"
+                name="image"
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="cityName">
               <Form.Label>City Name</Form.Label>
               <Form.Control
@@ -78,12 +103,10 @@ export const City = (city) => {
         </Modal.Body>
       </Modal>
       <Card className="city-card">
-        <Card.Img variant="top" src={img1} />
+        <Card.Img variant="top" src={`http://localhost:5000/api/image/${cityData.imageUrl}`} />
         <Card.Body>
           <Card.Title>{cityData.cityname}</Card.Title>
-          <Card.Text>
-            {cityData.citydesc}
-          </Card.Text>
+          <Card.Text>{cityData.citydesc}</Card.Text>
           <Button
             variant="primary"
             onClick={() => setShow(true)}
@@ -91,7 +114,9 @@ export const City = (city) => {
           >
             Edit City
           </Button>
-          <Button onClick={Deletecity} variant="primary">Delete City</Button>
+          <Button onClick={Deletecity} variant="primary">
+            Delete City
+          </Button>
         </Card.Body>
       </Card>
     </>
@@ -99,5 +124,5 @@ export const City = (city) => {
 };
 
 City.propTypes = {
-  city: PropTypes.object
+  city: PropTypes.object,
 };

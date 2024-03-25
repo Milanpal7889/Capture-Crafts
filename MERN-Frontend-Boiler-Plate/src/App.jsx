@@ -10,6 +10,8 @@ import { Aboutus } from './pages/Public/Aboutus/Aboutus'
 import { Footer } from './commonComponents/Footer/Footer'
 import { Categories } from './pages/Public/Categories/Categories'
 import Complaint from './pages/Public/Complaint/Complaint'
+import ManageUsers from './pages/admin/ManageUsers'
+import { ManageBooking } from './pages/admin/ManageUsers'
 function App() {
   const routes = [
     {
@@ -46,6 +48,21 @@ function App() {
       path: "/complaint",
       exact: true,
       component: <Complaint/>,
+    },
+    {
+      path: "/manageall",
+      exact: true,
+      component: < ManageUsers/> ,
+    },
+    {
+      path: "/*",
+      exact: true,
+      component: <div>url not found <br/> Error 404</div>,
+    },
+    {
+      path: "/something",
+      exact: true,
+      component: <ManageBooking/>,
     }
   ]
   return (

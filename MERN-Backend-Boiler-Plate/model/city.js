@@ -11,7 +11,10 @@ const citySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    
+    imageUrl:{
+        type: String
+    },
+
     status: String,
     
     created_at: {

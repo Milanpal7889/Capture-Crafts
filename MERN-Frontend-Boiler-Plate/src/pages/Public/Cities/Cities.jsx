@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import axiosConfig from "../../../helper/config";
 import ToastBs from "../../../commonComponents/Toast/Toast";
+import FormData from "form-data";
 export const Citys = () => {
   const [error, setError] = useState(false);
   const [citysData, setCitysData] = useState([]);
@@ -12,14 +13,24 @@ export const Citys = () => {
     citydesc: "",
   });
   const [show, setShow] = useState(false);
+  const [file, setFile] = useState(null);
+  const loggedIn = localStorage?.getItem("user") ? false : true;
+  useEffect(() => {
+    if (loggedIn) {
+      window.location.href = "/login";
+    }
+  }, []);
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosConfig.post("/admin/addcity", {
-        cityname: createCity.cityname,
-        citydesc: createCity.citydesc,
-      });
+      const formData = new FormData()
+      formData.append("image",file)
+      formData.append("cityname",createCity.cityname)
+      formData.append("citydesc",createCity.citydesc)
+      const response = await axiosConfig.post("/admin/addcity", 
+      formData
+      );
       if (!response?.data?.error) {
         const createcityDatares = await response?.data;
         console.log(createcityDatares);
@@ -61,6 +72,14 @@ export const Citys = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={HandleSubmit}>
+          <Form.Group className="mb-3" controlId="image">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                onChange={(e) => setFile(e.target.files[0])}
+                type="file"
+                name="image"
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="cityName">
               <Form.Label>City Name</Form.Label>
               <Form.Control

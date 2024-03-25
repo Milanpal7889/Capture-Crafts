@@ -18,8 +18,8 @@ const navlinks = [
     link: "/Categories",
   },
   {
-    name: "About Us",
-    link: "/complaint",
+    name: "Manage",
+    link: "/manageall",
   },
 ];
 
