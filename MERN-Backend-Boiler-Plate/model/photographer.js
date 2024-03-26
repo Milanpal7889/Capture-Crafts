@@ -15,7 +15,7 @@ const photographerSchema = new mongoose.Schema({
     type: String,
   },
 
-  name: {
+  shopname: {
     type: String,
     required: true,
   },
@@ -31,6 +31,10 @@ const photographerSchema = new mongoose.Schema({
     required: true,
   },
 
+  price: {
+    type: Number,
+  },
+
   contact: {
     type: Number,
     required: true,
@@ -39,10 +43,6 @@ const photographerSchema = new mongoose.Schema({
   shopadress: {
     type: String,
     required: true,
-  },
-
-  price: {
-    type: Number,
   },
 
   status: {

@@ -1,21 +1,25 @@
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
-import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import ToastBs from "../../../commonComponents/Toast/Toast";
 import AppContext from "../../../context/AppContext";
 import "./JoinPhotographer.scss";
- const Joinphotographer = () => {
-  const {login} = useContext(AppContext)
+const Joinphotographer = () => {
+  const { login } = useContext(AppContext);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("user");
   if (isLoggedIn) {
     navigate("/");
   }
-  const [userData, setUserData] = useState({ contact: "", shopadress: "" });
+  const [userData, setUserData] = useState({
+    contact: "",
+    shopadress: "",
+    price: "",
+    shopname: "",
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -31,7 +35,7 @@ import "./JoinPhotographer.scss";
       if (!error) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         localStorage.setItem("token", response.data.token);
-        login(response.data.user)
+        login(response.data.user);
         navigate("/");
       }
     } catch (err) {
@@ -41,19 +45,19 @@ import "./JoinPhotographer.scss";
   };
   return (
     <>
-        {
-          error && (
-            <ToastBs message="Invalid Credentials" type="danger" />
-          )
-        }
+      {error && <ToastBs message="Invalid Credentials" type="danger" />}
       <Container className="login-form">
         <Form onSubmit={handleSubmit} className="custom-form-login shadow">
           <h1 className="heading">Join as a Photographer</h1>
           <Form.Group className="mb-3">
+            {/* <Form.Select aria-label="Default City">
+              {citys.map((city) => (
+                <option key={city._id} value={city._id}>
+                  {city.cityname}
+                </option>
+              ))}
+            </Form.Select> */}
             <InputGroup className="form-input">
-              <InputGroup.Text>
-                <FontAwesomeIcon className="icon" icon={faUser} />
-              </InputGroup.Text>
               <Form.Control
                 onChange={(e) => {
                   setUserData((prevUserData) => ({
@@ -71,9 +75,40 @@ import "./JoinPhotographer.scss";
           </Form.Group>
           <Form.Group className="mb-3">
             <InputGroup className="form-input">
-              <InputGroup.Text>
-                <FontAwesomeIcon className="icon" icon={faLock} />
-              </InputGroup.Text>
+              <Form.Control
+                onChange={(e) => {
+                  setUserData((prevUserData) => ({
+                    ...prevUserData,
+                    [e.target.name]: e.target.value,
+                  }));
+                }}
+                type="text"
+                name="shopname"
+                value={userData.shopname}
+                placeholder="Enter Shop Name"
+                required
+              />
+            </InputGroup>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <InputGroup className="form-input">
+              <Form.Control
+                onChange={(e) => {
+                  setUserData((prevUserData) => ({
+                    ...prevUserData,
+                    [e.target.name]: e.target.value,
+                  }));
+                }}
+                type="number"
+                name="price"
+                value={userData.price}
+                placeholder="Enter Price"
+                required
+              />
+            </InputGroup>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <InputGroup className="form-input">
               <Form.Control
                 onChange={(e) => {
                   setUserData((prevUserData) => ({
@@ -100,4 +135,4 @@ import "./JoinPhotographer.scss";
   );
 };
 
-export default Joinphotographer
+export default Joinphotographer;

@@ -15,7 +15,12 @@ import { ManageBooking } from './pages/admin/ManageUsers'
 import AppState from './context/AppState'
 import { Photographers } from './pages/Public/Photographers/Photographers'
 import Joinphotographer from './pages/Auth/JoinAsPhotographer/JoinPhotographer'
+import { useEffect } from 'react'
 function App() {
+useEffect(()=>{
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+},[])
   const routes = [
     {
       path: "/",
